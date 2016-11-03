@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Twitch Search</title>
+    <script type="text/javascript" src="/public/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/public/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/public/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/public/js/default.js"></script>
+    <link rel="stylesheet" type="text/css" href="/public/css/jquery-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.min.css"/>
+
+    <script type="text/javascript">
+
+    </script>
+</head>
+<body>
+<h1>Twitter Weather</h1>
+<div class="alert alert-danger" style="display:none;" id="divError"></div>
+    <form>
+        <input id="btnBack" style="display:none;" type="button" class="btn btn-default" value="Back" onclick="GoBack(); return false;">
+
+        <div id="divSearch" class="form-inline">
+        <input id="btnSearch" type="submit" class="btn btn-default" value="Search"/>
+        </div>
+
+        <div id="divResults" style="display:none;">
+            <h2>Results</h2>
+            <table class="table table-striped">
+                <tbody id="tbodyResults">
+
+                </tbody>
+            </table>
+        </div>
+
+        <div id="divTweets" style="display:none;">
+            <h2 id="h2Tweets"></h2>
+            <table class="table table-striped">
+                <tbody id="tbodyTweets">
+
+                </tbody>
+            </table>
+        </div>
+
+    </form>
+</body>
+</html>
