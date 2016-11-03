@@ -1,0 +1,87 @@
+console.log('do a thing ');
+    var location = request.query.location;
+    var strings = ["weather", "thunder", "rain", "lightning", "storm", "snow", "blizzard", "sun", "flood", "cloud"];
+    var space = "%20";
+    var or = "%20OR%20";
+
+    var finalResults = [];
+
+    var query = 'weather%20australia';
+
+    for (var i = 0; i < strings.length; i++){
+        var string = strings[i];
+
+            query = "australia%20" + string;
+
+        var url = 'search/tweets.json?q=' + query + "&lang=en&result_type=recent&count=100";
+        console.log(url);
+
+        client.get(url, function(error, tweets, res) {
+
+            if (!error) {
+                console.log(tweets);
+                for (var l = 0; l < tweets.statuses.length; l++){
+                    tweet = tweets.statuses[l];
+                    console.log(tweet.user);
+                    var text = tweet.text;
+                    var user = tweet.user;
+
+                    for (var j = 0; j < strings.length; j++){
+                        if (text.indexOf(strings[j]) > 0){
+                            var obj = new Tweet(user.screen_name, tweet.text, tweet.created_at, strings[j]);
+                            finalResults.push(obj);
+                            console.log(obj);
+                            console.log(user.screen_name);
+                            console.log(tweet.text);
+                            console.log(tweet.created_at);
+                            console.log(strings[j]);
+                        }
+                    }
+                }
+                console.log('----------------------');
+                for (var k = 0; k < finalResults.length; k++){
+                    console.log(finalResults[k]);
+
+                }
+            }else{
+                console.log("error: ");
+                console.log(error);
+            }
+        });
+    }
+
+    var json = json.stringify(finalResults);
+    console.log(json);
+
+    response.send(200, json);
+    response.end();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+, "cloud", "snow", "blizzard", "sun""weather", 

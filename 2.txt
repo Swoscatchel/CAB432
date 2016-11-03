@@ -1,0 +1,40 @@
+if (!error) {
+                    console.log('Tweets: ' + tweets);
+                    for (var i = 0; i < tweets.statuses.length; i++) {
+                        tweet = tweets.statuses[i];
+                        console.log('User: ' + tweet.user);
+                        var text = tweet.text;
+                        var user = tweet.user;
+
+                        for (var j = 0; j < strings.length; j++) {
+                            if (text.indexOf(strings[j]) > 0) {
+                                var obj = new Tweet(user.screen_name, tweet.text, tweet.created_at, strings[j]);
+                                finalResults.push(obj);
+                                console.log('Object: ' + obj);
+                                console.log(user.screen_name);
+                                console.log(tweet.text);
+                                console.log(tweet.created_at);
+                                console.log(strings[j]);
+                            }
+                        }
+
+
+                        if(i == strings.length + 1){
+                            var json = JSON.stringify(finalResults);
+                            console.log('JSON: ' + json);
+
+                            response.status(200).send(json);
+                            console.log("response sent")
+                            response.end();
+                        }
+
+                    }
+                    console.log('---------------------------------------------');
+                    for (var k = 0; k < finalResults.length; k++) {
+                        console.log(finalResults[k]);
+
+                    }
+                } else {
+                    console.log("error: ");
+                    console.log(error);
+                }
