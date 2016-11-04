@@ -42,7 +42,6 @@ app.get('/search', function(appReq, appRes){
         console.log(url);
 
         client.get(url, function(error, tweets, clientRes) {
-            count += 1;
             if (!error) {
 
                 for (var j = 0; j < tweets.statuses.length; j++) {
@@ -60,6 +59,7 @@ app.get('/search', function(appReq, appRes){
                 console.log("Error: ");
                 console.log(error);
             }
+            count ++;
 
             if (count == weathers.length){
                 //var json = JSON.stringify(results);
