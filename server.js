@@ -31,7 +31,7 @@ app.get('/', function(request, response){
 
 app.get('/search', function(appReq, appRes){
     var weathers = ["Thunder"];//, "Rain", "Lightning", "Storm", "Flood"];
-    
+    var count = 0;
     var results = new Result([]);
 
     for (var i = 0; i < weathers.length; i++){
@@ -42,6 +42,7 @@ app.get('/search', function(appReq, appRes){
         console.log(url);
 
         client.get(url, function(error, tweets, clientRes) {
+            count += 1;
             if (!error) {
 
                 for (var j = 0; j < tweets.statuses.length; j++) {
@@ -60,7 +61,7 @@ app.get('/search', function(appReq, appRes){
                 console.log(error);
             }
 
-            if (i == weathers.length-1){
+            if (count == weathers.length){
                 //var json = JSON.stringify(results);
                 //console.log(json);
                 console.log("SENDING");
