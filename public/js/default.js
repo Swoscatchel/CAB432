@@ -3,35 +3,63 @@ var _json;
 $(document).ready(function(){
     $('#btnSearch').on('click', function(){
         var location = $('#ddlLocation option:selected').text();
-        var parameters = {location: location};
-        $('#divError').hide();
+        var txtSearch = $('#txtSearch');
+        var terms = txtSearch.val().split('|');
+        var parameters = {location: location, terms: terms};
+        var divError = $('#divError');
+        divError.hide();
 
-        $.ajax({
-            url: '/search',
-            data: parameters,
-            success: function(data) {
-                _json = data;
-                var text = '';
+        if (txtSearch.val() == null || txtSearch.val() == ''){
+            divError.text('Please enter a search value');
+            divError.show();
+        }
+        else if (terms.length > 5){
+            divError.text('Please enter a maximum of 5 terms');
+            divError.show();
+        }
+        else if($('#ddlLocation option:selected').text() == '- select location -')
+        {
+            divError.text('Please select a location to filter by');
+            divError.show();
+        }
+        else {
+            $.ajax({
+                url: '/search',
+                data: parameters,
+                success: function (data) {
+                    paremeters = {terms: terms, data: data};
+                    _json = data;
+                    var text = '';
 
-                for(var i = 0; i < _json.categories.length; i++)
-                {
-                    var category = _json.categories[i];
-                    text += '<tr>' +
-                    '<td>'
-                        + category.category + '</td>'
-                            + '<td>'
-                            + '<input type="button" class="btn btn-link" '
-                            + 'onclick="CategoryClicked(\''
-                        + category.category + '\','
-                        + i + ')" value="Edit"/>'
-                    +'</td>'
-                        + '</tr>';
+                    for (var i = 0; i < _json.categories.length; i++) {
+                        var category = _json.categories[i];
+
+                        if(category.tweets.length == 0){
+                            text += '<tr>' +
+                                '<td>'
+                                + category.category +' - no results found</td>'
+                                + '<td>'
+                                + '</td>'
+                                + '</tr>';
+                        }
+                        else{
+                            text += '<tr>' +
+                                '<td>'
+                                + category.category + ' - ' + category.tweets.length + ' results found</td>'
+                                + '<td>'
+                                + '<input type="button" class="btn btn-link" '
+                                + 'onclick="CategoryClicked(\''
+                                + category.category + '\','
+                                + i + ')" value="View"/>'
+                                + '</td>'
+                                + '</tr>';
+                        }
+                    }
+                    $('#tbodyResults').html(text);
+                    $('#divResults').show();
                 }
-                $('#tbodyResults').html(text);
-                $('#divResults').show();
-            }
-
-        });
+            });
+        }
         return false;
     });
 });
