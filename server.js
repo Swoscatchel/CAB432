@@ -29,49 +29,70 @@ app.get('/', function(request, response){
     console.log('Server listening on port ' + port);
 });
 
-app.get('/search', function(appReq, appRes){
-    var weathers = ["Thunder"];//, "Rain", "Lightning", "Storm", "Flood"];
+app.get('/search', function(appReq, appRes) {
+    //var weathers = ["Thunder", "Rain", "Lightning", "Storm", "Flood"];
     var count = 0;
-    var results = new Result([]);
+    var results = [];
+    var terms = appReq.query.terms;
+    console.log(terms);
+    var location = appReq.query.location;
+    console.log(location);
 
-    for (var i = 0; i < weathers.length; i++){
-        var weather = weathers[i];
-        var category = new Category(weather, []);
-        var query = weather + '%20australia';
+    for (var i = 0; i < terms.length; i++) {
+        var term = terms[i];
+        var query = location + '%20' + term;
+        console.log(query);
         var url = 'search/tweets.json?q=' + query + "&lang=en&result_type=recent&count=100";
         console.log(url);
 
-        client.get(url, function(error, tweets, clientRes) {
-            if (!error) {
+    client.get(url, function (error, tweets, clientRes) {
+        if (!error){
+            //console.log(tweets);
+            results.push(tweets);
+        }
+        else{
+            console.error("Error: " + error);
+        }
+        count ++;
 
-                for (var j = 0; j < tweets.statuses.length; j++) {
-                    var tweet = tweets.statuses[j];
-                    var text = tweet.text;
-                    var user = tweet.user;
-                    console.log(user);
-                    if (text.indexOf(weather) > 0) {
-                        var t = new Tweet(user.screen_name, text, tweet.created_at);
-                        category.tweets.push(t);
-                    }
-                }
-                results.categories.push(category);
-            }else {
-                console.log("Error: ");
-                console.log(error);
-            }
-            count ++;
+        if (count == terms.length){
+            var finalResults = Process(results, terms);
 
-            if (count == weathers.length){
-                //var json = JSON.stringify(results);
-                //console.log(json);
-                console.log("SENDING");
-                appRes.status(200).send(results);
-                console.log("appRes sent");
-                appRes.end();
-            }
-        });
+            appRes.status(200).send(finalResults);
+            appRes.end();
+        }
+        //console.log("CLIENT RESPONSE");
+        //console.log(clientRes);
+    });
     }
 });
+
+function Process(data, terms) {
+    var results = new Result([]);
+    for (var i = 0; i < data.length; i++) {
+        var category = new Category(term, []);
+        var tweets = data[i];
+        console.log(tweets.statuses);
+        console.log(tweets.statuses.length);
+        console.log("---------------------------------------------------------------")
+        var term = terms[i];
+        var category = new Category(term, []);
+        for (var j = 0; j < tweets.statuses.length; j++) {
+            var tweet = tweets.statuses[j];
+            console.log("TWEET")
+            console.log(tweet);
+            var text = tweet.text;
+            var user = tweet.user;
+            console.log(user);
+            var t = new Tweet(user.screen_name, text, tweet.created_at);
+            category.tweets.push(t);
+        }
+        results.categories.push(category);
+
+    }
+    return results;
+}
+
 
 function Result (categories){
     this.categories = categories;
